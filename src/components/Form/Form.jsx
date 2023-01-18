@@ -2,8 +2,8 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormEl, FormLabel, InputEl, ButtonEl } from './Form.styled';
 import { nanoid } from 'nanoid';
-import { addContact } from 'redux/contactsSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { addContact } from 'redux/operations';
 
 export function Form() {
   const [name, setName] = useState('');
@@ -30,14 +30,17 @@ export function Form() {
     }
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-
-    const action = addContact({ id: nanoid(), name, number });
+  const addContactToList = (name, number) => {
     if (contactIsNotInList(name)) {
+      const action = addContact({ id: nanoid(), name, phone: number });
       dispatch(action);
       reset();
     }
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    addContactToList(name, number);
   };
 
   const contactIsNotInList = name => {
